@@ -1,0 +1,28 @@
+#! /bin/bash
+
+curdir=$(cd $(dirname $0) && pwd)
+ssh_config_path="$HOME/.ssh/config"
+
+
+cd "${curdir}"
+source ./ssh_settings.config
+
+./generate_ssh_key \
+  -t ${key_type} \
+  -b ${key_len} \
+  -p ${key_prefix} \
+  -n ${key_name}
+
+echo
+
+./print_ssh_config \
+  -h ${ssh_host} \
+  -u ${ssh_user} \
+  -n ${ssh_hostname} \
+  -p ${ssh_port} \
+  -f ${ssh_identityfile} \
+  -i ${ssh_serveraliveinterval} \
+  -c ${ssh_serveralivecountmax} \
+  | tee -a "${ssh_config_path}"
+
+exit 0;

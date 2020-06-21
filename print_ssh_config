@@ -1,0 +1,93 @@
+#! /bin/bash
+
+host="example"
+user="user"
+hostname="sample.example.com"
+port=22
+identityfile="~/.ssh/id_rsa"
+serveraliveinterval=
+serveralivecountmax=
+
+declare -a config_settings=()
+
+usage_exit() {
+    cat << USAGE >&2
+Usage: config_print [OPTION]...
+
+[OPTION]
+  -h <Host>
+  -u <User>
+  -n <Hostname>
+  -p <Port>
+  -f <IdentityFile>
+  -i <ServerAliveInterval>
+  -c <ServerLiveCountMax>
+USAGE
+
+    exit 1;
+}
+
+init_config_settings() {
+    config_settings=(
+        "Host ${host}" \
+        "  User ${user}" \
+        "  Hostname ${hostname}" \
+        "  Port ${port}" \
+        "  IdentityFile ${identityfile}" \
+        "  ServerAliveInterval ${serveraliveinterval}" \
+        "  ServerAliveCountMax ${serveralivecountmax}" \
+    )
+}
+
+print_config() {
+    regexp='^ +[a-zA-Z]+ +$'
+
+    ssh_config="${config_settings[0]}"
+    for config_setting in "${config_settings[@]:1}"; do
+        if [[ $config_setting =~ $regexp ]]; then continue; fi
+        ssh_config="${ssh_config}
+${config_setting}"
+    done
+
+    echo "${ssh_config}"
+}
+
+main() {
+    init_config_settings
+    print_config
+}
+
+optspec=":h:u:n:p:f:i:c:"
+while getopts "${optspec}" optchar; do
+    case "${optchar}" in
+        h)
+            host="$OPTARG"
+            ;;
+        u)
+            user="$OPTARG"
+            ;;
+        n)
+            hostname="$OPTARG"
+            ;;
+        p)
+            port="$OPTARG"
+            ;;
+        f)
+            identityfile="$OPTARG"
+            ;;
+        i)
+            serveraliveinterval="$OPTARG"
+            ;;
+        c)
+            serveralivecountmax="$OPTARG"
+            ;;
+        *)
+            echo "Unknown option ${@}" >&2
+            usage_exit
+            ;;
+    esac
+done
+
+main
+
+exit 0;

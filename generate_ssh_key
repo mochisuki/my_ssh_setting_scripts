@@ -1,0 +1,72 @@
+#! /bin/bash
+
+key_type='rsa'
+key_len=2048
+key_prefix="$HOME/.ssh/keys"
+key_name="id_rsa"
+
+key_abs_path=""
+
+usage_exit() {
+    cat << EOF 2>&1
+usage:
+ssh_keygen [OPTIONS]...
+
+[OPTIONS]
+  -t <key_type>(default: rsa)
+  -b <key_length>(default: 2048)
+  -p <key_prefix>(default: $HOME/.ssh/keys)
+  -n <key_name>(default: id_rsa)
+  -h <- help usage
+EOF
+
+    exit 1;
+}
+
+
+init_key_abs_path() {
+    key_abs_path="${key_prefix}/${key_name}"
+    mkdir -p "${key_prefix}"
+}
+
+generate_ssh_key() {
+    echo "${key_type}"
+    echo "${key_len}"
+    echo "${key_abs_path}"
+    ssh-keygen -t "${key_type}" -b "${key_len}" -f "${key_abs_path}" -N ""
+}
+
+main() {
+    init_key_abs_path
+    generate_ssh_key
+}
+
+
+optspec=":t:b:p:n:h"
+while getopts "${optspec}" optchar; do
+    case "${optchar}" in
+        t)
+            key_type="$OPTARG"
+            ;;
+        b)
+            key_len="$OPTARG"
+            ;;
+        p)
+            key_prefix="$OPTARG"
+            ;;
+        n)
+            key_name="$OPTARG"
+            ;;
+        h)
+            usage_exit
+            ;;
+        *)
+            echo "Unknown option ${@}" >&2
+            usage_exit
+            ;;
+    esac
+done
+
+main
+
+exit 0;

@@ -1,1 +1,2 @@
-ssh_settings.config
+/config/*
+!/config/samples

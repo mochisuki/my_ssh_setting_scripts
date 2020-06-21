@@ -5,7 +5,7 @@ ssh_config_path="$HOME/.ssh/config"
 
 
 cd "${curdir}"
-source ./ssh_settings.config
+source ../config/ssh_settings.config
 
 ./generate_ssh_key \
   -t ${key_type} \

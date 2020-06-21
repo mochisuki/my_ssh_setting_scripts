@@ -30,9 +30,6 @@ init_key_abs_path() {
 }
 
 generate_ssh_key() {
-    echo "${key_type}"
-    echo "${key_len}"
-    echo "${key_abs_path}"
     ssh-keygen -t "${key_type}" -b "${key_len}" -f "${key_abs_path}" -N ""
 }
 

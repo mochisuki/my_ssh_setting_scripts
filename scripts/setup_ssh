@@ -2,17 +2,31 @@
 
 curdir=$(cd $(dirname $0) && pwd)
 ssh_config_path="$HOME/.ssh/config"
+ssh_settings_config_path="${curdir}/../config/ssh_settings.config"
+
+
+optspec=":c:"
+while getopts "${optspec}" optchar; do
+    case "${optchar}" in
+        c)
+            ssh_settings_config_path="$OPTARG"
+            ;;
+        *)
+            echo "Unknown option ${@}" >&2
+            usage_exit
+            ;;
+    esac
+done
+
+
+if [ ! -e "${ssh_settings_config_path}" ]; then
+    echo "${ssh_settings_config_path} is not found." >&2
+    exit 1;
+fi
+source ../config/ssh_settings.config
 
 
 cd "${curdir}"
-
-if [ ! -e ../config/ssh_settings.config ]; then
-    echo 'config/ssh_settings.config is not found.' >&2
-    exit 1;
-fi
-
-source ../config/ssh_settings.config
-
 ./generate_ssh_key \
   -t ${key_type} \
   -b ${key_len} \

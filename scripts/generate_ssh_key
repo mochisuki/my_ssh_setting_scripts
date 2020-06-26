@@ -31,6 +31,7 @@ init_key_abs_path() {
 
 generate_ssh_key() {
     ssh-keygen -t "${key_type}" -b "${key_len}" -f "${key_abs_path}" -N ""
+    chmod 600 "${key_abs_path}"
 }
 
 main() {

@@ -5,6 +5,12 @@ ssh_config_path="$HOME/.ssh/config"
 
 
 cd "${curdir}"
+
+if [ ! -e ../config/ssh_settings.config ]; then
+    echo 'config/ssh_settings.config is not found.' >&2
+    exit 1;
+fi
+
 source ../config/ssh_settings.config
 
 ./generate_ssh_key \
@@ -21,8 +27,6 @@ echo
   -n ${ssh_hostname} \
   -p ${ssh_port} \
   -f ${ssh_identityfile} \
-  -i ${ssh_serveraliveinterval} \
-  -c ${ssh_serveralivecountmax} \
   | tee -a "${ssh_config_path}"
 
 exit 0;

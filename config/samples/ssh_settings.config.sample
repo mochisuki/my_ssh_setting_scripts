@@ -1,17 +1,19 @@
 #! /bin/bash
 
+# github ssh setting sample
+
 ## for generate_ssh_key
 key_type='rsa'
 key_len=2048
-key_prefix="$HOME/.ssh/keys/sample"
+key_prefix="$HOME/.ssh/keys/github"
 key_name="id_rsa"
 
 ## for print_ssh_config
-ssh_host="example"
-ssh_user="user"
-ssh_hostname="sample.example.com"
+ssh_host="github"
+ssh_user="git"
+ssh_hostname="github.com"
 ssh_port=22
 ssh_identityfile="${key_prefix}/${key_name}"
-ssh_serveraliveinterval=
-ssh_serveralivecountmax=
+#ssh_serveraliveinterval=
+#ssh_serveralivecountmax=
 
